@@ -22,6 +22,7 @@ const createNewBlog = async (req, res, next) => {
 }
 const editBlog = async (req, res, next) => {
   try {
+    //findByIdAndUpdate is a mongoose method that updates a document in the database(it receives an id and an object and the third parameter returns the updated document)
     const blog = await blogsModel.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     })
