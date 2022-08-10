@@ -1,16 +1,7 @@
 import mongoose from "mongoose"
+import commentsSchema from "./comments.js"
 
 const { Schema } = mongoose
-
-const commentsSchema = new Schema(
-  {
-    text: { type: String, required: true },
-    userName: { type: String, required: true },
-  },
-  {
-    timestamps: true,
-  }
-)
 
 const blogsSchema = new Schema(
   {

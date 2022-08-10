@@ -5,12 +5,9 @@ const postComment = async (req, res, next) => {
   try {
     const blog = await blogsModel.findById(req.params.id)
     if (blog) {
-      const newComment = {
-        ...req.body,
-      }
       const updatedBlog = await blogsModel.findByIdAndUpdate(
         req.params.id,
-        { $push: { comments: newComment } },
+        { $push: { comments: req.body } },
         { new: true, runValidators: true }
       )
       if (updatedBlog) {
