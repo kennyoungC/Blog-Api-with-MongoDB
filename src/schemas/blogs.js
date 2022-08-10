@@ -12,10 +12,7 @@ const blogsSchema = new Schema(
       value: { type: Number, required: true },
       unit: { type: String, required: true },
     },
-    author: {
-      name: { type: String, required: true },
-      avatar: { type: String, required: true },
-    },
+    author: [{ type: Schema.Types.ObjectId, ref: "Author" }],
     content: { type: String, required: true },
     comments: { default: [], type: [commentsSchema] },
   },
