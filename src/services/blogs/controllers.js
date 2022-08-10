@@ -1,9 +1,17 @@
 import createHttpError from "http-errors"
 import blogsModel from "../../models/Blogs.js"
+import q2m from "query-to-mongo"
 
 const getAllBlogs = async (req, res, next) => {
   try {
-    const blogs = await blogsModel.find()
+    const mongoQuery = q2m(req.query)
+    const blogs = await blogsModel
+      .find()
+      .find(mongoQuery.criteria, mongoQuery.options.fields)
+      .skip(mongoQuery.options.skip)
+      .limit(mongoQuery.options.limit)
+      .sort(mongoQuery.options.sort)
+      .populate({ path: "author", select: "name email avatar" })
     res.send(blogs)
   } catch (error) {
     next(createHttpError(500, error.message))
