@@ -6,7 +6,6 @@ const getAllBlogs = async (req, res, next) => {
   try {
     const mongoQuery = q2m(req.query)
     const blogs = await blogsModel
-      .find()
       .find(mongoQuery.criteria, mongoQuery.options.fields)
       .skip(mongoQuery.options.skip)
       .limit(mongoQuery.options.limit)
