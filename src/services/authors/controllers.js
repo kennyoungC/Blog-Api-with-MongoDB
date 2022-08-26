@@ -1,6 +1,7 @@
 import createHttpError from "http-errors"
 import authorsModel from "../../models/authors.js"
 import q2m from "query-to-mongo"
+import { authenticateAuthor } from "../../auth/tools.js"
 
 const getAllAuthors = async (req, res, next) => {
   try {
@@ -96,7 +97,9 @@ const login = async (req, res, next) => {
       req.body.password
     )
     if (author) {
-      res.send(author)
+      console.log(author)
+      // const { accessToken, refreshToken } = await authenticateAuthor(author)
+      // res.send({ accessToken, refreshToken })
     } else {
       next(createHttpError(401, "Invalid credentials"))
     }
@@ -114,6 +117,7 @@ const authorsHandler = {
   getPersonalAuthors,
   editPersonalAuthor,
   deletePersonalAuthor,
+  login,
 }
 
 export default authorsHandler

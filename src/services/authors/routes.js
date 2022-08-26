@@ -1,6 +1,7 @@
 import express from "express"
 import { adminAuthMiddleware } from "../../auth/adminAuth.js"
 import { basicAuthMiddleware } from "../../auth/basicAuth.js"
+import { JWTAuthMiddleware } from "../../auth/tokenAuth.js"
 
 const authorRouter = express.Router()
 import authorsHandler from "./controllers.js"
@@ -14,22 +15,25 @@ const {
   deletePersonalAuthor,
   editPersonalAuthor,
   getPersonalAuthors,
+  login,
 } = authorsHandler
 
 authorRouter
   .route("/me")
-  .get(basicAuthMiddleware, getPersonalAuthors)
-  .put(basicAuthMiddleware, editPersonalAuthor)
-  .delete(basicAuthMiddleware, deletePersonalAuthor)
 
+  .get(JWTAuthMiddleware, getPersonalAuthors)
+  .put(JWTAuthMiddleware, editPersonalAuthor)
+  .delete(JWTAuthMiddleware, deletePersonalAuthor)
+
+authorRouter.post("/login", login)
 authorRouter
   .route("/")
   .post(createNewAuthor)
-  .get(basicAuthMiddleware, adminAuthMiddleware, getAllAuthors)
+  .get(JWTAuthMiddleware, adminAuthMiddleware, getAllAuthors)
 authorRouter
   .route("/:id")
-  .put(basicAuthMiddleware, adminAuthMiddleware, editAuthor)
-  .delete(basicAuthMiddleware, adminAuthMiddleware, deleteAuthor)
-  .get(basicAuthMiddleware, adminAuthMiddleware, getSingleAuthor)
+  .put(JWTAuthMiddleware, adminAuthMiddleware, editAuthor)
+  .delete(JWTAuthMiddleware, adminAuthMiddleware, deleteAuthor)
+  .get(JWTAuthMiddleware, adminAuthMiddleware, getSingleAuthor)
 
 export default authorRouter

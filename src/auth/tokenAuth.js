@@ -1,7 +1,7 @@
 import createHttpError from "http-errors"
 import { verifyAccessToken } from "./tools.js"
 
-const JWTAuthMiddleware = async (req, res, next) => {
+export const JWTAuthMiddleware = async (req, res, next) => {
   const { authorization } = req.headers
   if (!authorization) {
     next(

@@ -1,6 +1,6 @@
 import createHttpError from "http-errors"
 import jwt from "jsonwebtoken"
-import authorsModel from "../models/authors"
+import authorsModel from "../models/authors.js"
 
 export const authenticateAuthor = async (author) => {
   // 1. Given the author, it generates two tokens (accessToken & refreshToken)
