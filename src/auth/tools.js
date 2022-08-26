@@ -2,7 +2,7 @@ import createHttpError from "http-errors"
 import jwt from "jsonwebtoken"
 import authorsModel from "../models/authors"
 
-const authenticateAuthor = async (author) => {
+export const authenticateAuthor = async (author) => {
   // 1. Given the author, it generates two tokens (accessToken & refreshToken)
   const accessToken = await generateAccssToken({
     _id: author._id,
@@ -21,7 +21,9 @@ const authenticateAuthor = async (author) => {
   return { accessToken, refreshToken }
 }
 
-const verifyRefreshTokenAndGenerateNewTokens = async (currentRefreshToken) => {
+export const verifyRefreshTokenAndGenerateNewTokens = async (
+  currentRefreshToken
+) => {
   try {
     // 1. Check expiration date and integrity of the refresh token, we gonna catch potential errors
     const { _id } = await verifyRefreshToken(currentRefreshToken)
@@ -42,7 +44,7 @@ const verifyRefreshTokenAndGenerateNewTokens = async (currentRefreshToken) => {
   }
 }
 
-const generateAccssToken = (payload) =>
+export const generateAccssToken = (payload) =>
   new Promise((res, rej) => {
     jwt.sign(
       payload,
@@ -55,7 +57,7 @@ const generateAccssToken = (payload) =>
     )
   })
 
-const verifyAccessToken = (token) => {
+export const verifyAccessToken = (token) => {
   return new Promise((res, rej) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
       if (err) rej(err)
@@ -64,7 +66,7 @@ const verifyAccessToken = (token) => {
   })
 }
 
-const generateRefreshToken = (payload) => {
+export const generateRefreshToken = (payload) => {
   return new Promise((res, rej) => {
     jwt.sign(
       payload,
@@ -77,7 +79,7 @@ const generateRefreshToken = (payload) => {
     )
   })
 }
-const verifyRefreshToken = (token) => {
+export const verifyRefreshToken = (token) => {
   return new Promise((res, rej) => {
     jwt.verify(token, process.env.JWT_REFRESH_TOKEN, (err, payload) => {
       if (err) rej(err)
