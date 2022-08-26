@@ -54,11 +54,58 @@ const deleteBlog = async (req, res, next) => {
     next(createHttpError(500, error.message))
   }
 }
+const getAuthorsBlog = async (req, res, next) => {
+  try {
+    const blog = await blogsModel.find({ author: req.user._id })
+    res.send(blog)
+  } catch (error) {
+    next(createHttpError(500, error.message))
+  }
+}
+const editShareBlog = async (req, res, next) => {
+  try {
+    const blog = await blogsModel.findById(req.params.id)
+
+    if (blog.author.includes(req.user._id)) {
+      const modifiedBlog = await blogsModel.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      )
+      res.send(modifiedBlog)
+    } else {
+      next(createHttpError(403, "You can't edit this blog"))
+    }
+  } catch (error) {
+    next(createHttpError(500, error.message))
+  }
+}
+
+const deleteShareBlog = async (req, res, next) => {
+  try {
+    const blog = await blogsModel.findById(req.params.id)
+    if (blog.author.includes(req.user._id)) {
+      await blogsModel.findByIdAndDelete(req.params.id)
+      res.status(204).send()
+    } else {
+      next(createHttpError(403, "You can't delete this blog"))
+    }
+  } catch (error) {
+    next(createHttpError(500, error.message))
+  }
+}
+
 const blogsHandler = {
   getAllBlogs,
   createNewBlog,
   editBlog,
   getSingleBlog,
   deleteBlog,
+  getAuthorsBlog,
+  editShareBlog,
+  deleteShareBlog,
 }
 export default blogsHandler

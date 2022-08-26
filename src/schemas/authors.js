@@ -9,6 +9,7 @@ const authorsSchema = new Schema(
     avatar: { type: String, required: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["User", "Admin"], default: "User" },
+    refreshToken: { type: String },
   },
   {
     timestamps: true,

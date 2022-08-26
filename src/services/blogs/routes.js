@@ -1,9 +1,19 @@
 import express from "express"
 import blogsHandler from "./controllers.js"
 import commentsHandler from "./commentsControlller.js"
+import { basicAuthMiddleware } from "../../auth/basicAuth.js"
+import { adminAuthMiddleware } from "../../auth/adminAuth.js"
 
-const { getAllBlogs, createNewBlog, deleteBlog, getSingleBlog, editBlog } =
-  blogsHandler
+const {
+  getAllBlogs,
+  createNewBlog,
+  deleteBlog,
+  getSingleBlog,
+  editBlog,
+  getAuthorsBlog,
+  editShareBlog,
+  deleteShareBlog,
+} = blogsHandler
 const {
   postComment,
   getAllComments,
@@ -14,8 +24,22 @@ const {
 
 const router = express.Router()
 
-router.route("/").get(getAllBlogs).post(createNewBlog)
-router.route("/:id").get(getSingleBlog).put(editBlog).delete(deleteBlog)
+router.route("/stories/me").get(basicAuthMiddleware, getAuthorsBlog)
+
+router
+  .route("/stories/me/:id")
+  .put(basicAuthMiddleware, editShareBlog)
+  .delete(basicAuthMiddleware, deleteShareBlog)
+
+router
+  .route("/")
+  .get(basicAuthMiddleware, adminAuthMiddleware, getAllBlogs)
+  .post(createNewBlog)
+router
+  .route("/:id")
+  .get(basicAuthMiddleware, adminAuthMiddleware, getSingleBlog)
+  .put(basicAuthMiddleware, adminAuthMiddleware, editBlog)
+  .delete(basicAuthMiddleware, adminAuthMiddleware, deleteBlog)
 
 // COMMENT ROUTES
 router.route("/:id").post(postComment)
