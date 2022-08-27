@@ -6,7 +6,12 @@ const authorsSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
-    avatar: { type: String, required: true },
+    avatar: {
+      type: String,
+      required: true,
+      default: "https://via.placeholder.com/150",
+    },
+    cloudinaryId: { type: String, required: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["User", "Admin"], default: "User" },
     refreshToken: { type: String },

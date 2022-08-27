@@ -2,6 +2,7 @@ import express from "express"
 import { adminAuthMiddleware } from "../../auth/adminAuth.js"
 import { basicAuthMiddleware } from "../../auth/basicAuth.js"
 import { JWTAuthMiddleware } from "../../auth/tokenAuth.js"
+import upload from "../../utils/multer.js"
 
 const authorRouter = express.Router()
 import authorsHandler from "./controllers.js"
@@ -16,6 +17,7 @@ const {
   editPersonalAuthor,
   getPersonalAuthors,
   login,
+  refreshToken,
 } = authorsHandler
 
 authorRouter
@@ -26,9 +28,11 @@ authorRouter
   .delete(JWTAuthMiddleware, deletePersonalAuthor)
 
 authorRouter.post("/login", login)
+authorRouter.post("/refreshToken", refreshToken)
+authorRouter.post("/register", upload.single("avatar"), createNewAuthor)
+
 authorRouter
   .route("/")
-  .post(createNewAuthor)
   .get(JWTAuthMiddleware, adminAuthMiddleware, getAllAuthors)
 authorRouter
   .route("/:id")
