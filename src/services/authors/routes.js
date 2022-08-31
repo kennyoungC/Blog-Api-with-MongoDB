@@ -1,4 +1,5 @@
 import express from "express"
+import passport from "passport"
 import { adminAuthMiddleware } from "../../auth/adminAuth.js"
 import { basicAuthMiddleware } from "../../auth/basicAuth.js"
 import { JWTAuthMiddleware } from "../../auth/tokenAuth.js"
@@ -20,9 +21,31 @@ const {
   refreshToken,
 } = authorsHandler
 
+authorRouter.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+)
+authorRouter.get(
+  "/googleRedirect",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: `${process.env.API_URL}/api/authors/login`,
+  }),
+  (req, res, next) => {
+    // The purpose of this endpoint is to receive a response from Google, execute the google callback function, then send a response to the client
+    try {
+      const { accessToken, refreshToken } = req.user
+      res.redirect(
+        `${process.env.API_URL}/users?accessToken=${accessToken}&refreshToken=${refreshToken}`
+      )
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
 authorRouter
   .route("/me")
-
   .get(JWTAuthMiddleware, getPersonalAuthors)
   .put(JWTAuthMiddleware, editPersonalAuthor)
   .delete(JWTAuthMiddleware, deletePersonalAuthor)

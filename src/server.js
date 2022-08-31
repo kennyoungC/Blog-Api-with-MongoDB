@@ -9,12 +9,18 @@ import {
   unauthorizedHandler,
   catchAllHandler,
 } from "./errorHandlers.js"
+import passport from "passport"
+import googleStrategy from "./auth/googleOAuth.js"
 
 const server = express()
 
 const port = process.env.PORT || 3001
-server.use(express.json())
+
+passport.use("google", googleStrategy)
+
 server.use(cors())
+server.use(express.json())
+server.use(passport.initialize())
 
 // **************** ENDPOINTS ***************
 server.use("/api/blogPosts", blogRoutes)

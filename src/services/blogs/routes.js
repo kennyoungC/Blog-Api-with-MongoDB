@@ -3,6 +3,7 @@ import blogsHandler from "./controllers.js"
 import commentsHandler from "./commentsControlller.js"
 import { basicAuthMiddleware } from "../../auth/basicAuth.js"
 import { adminAuthMiddleware } from "../../auth/adminAuth.js"
+import { JWTAuthMiddleware } from "../../auth/tokenAuth.js"
 
 const {
   getAllBlogs,
@@ -24,22 +25,19 @@ const {
 
 const router = express.Router()
 
-router.route("/stories/me").get(basicAuthMiddleware, getAuthorsBlog)
+router.route("/stories/me").get(JWTAuthMiddleware, getAuthorsBlog)
 
 router
   .route("/stories/me/:id")
-  .put(basicAuthMiddleware, editShareBlog)
-  .delete(basicAuthMiddleware, deleteShareBlog)
+  .put(JWTAuthMiddleware, editShareBlog)
+  .delete(JWTAuthMiddleware, deleteShareBlog)
 
-router
-  .route("/")
-  .get(basicAuthMiddleware, adminAuthMiddleware, getAllBlogs)
-  .post(createNewBlog)
+router.route("/").get(getAllBlogs).post(createNewBlog)
 router
   .route("/:id")
-  .get(basicAuthMiddleware, adminAuthMiddleware, getSingleBlog)
-  .put(basicAuthMiddleware, adminAuthMiddleware, editBlog)
-  .delete(basicAuthMiddleware, adminAuthMiddleware, deleteBlog)
+  .get(JWTAuthMiddleware, getSingleBlog)
+  .put(JWTAuthMiddleware, adminAuthMiddleware, editBlog)
+  .delete(JWTAuthMiddleware, adminAuthMiddleware, deleteBlog)
 
 // COMMENT ROUTES
 router.route("/:id").post(postComment)

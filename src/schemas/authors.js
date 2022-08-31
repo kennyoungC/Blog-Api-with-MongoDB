@@ -11,10 +11,11 @@ const authorsSchema = new Schema(
       required: true,
       default: "https://via.placeholder.com/150",
     },
-    cloudinaryId: { type: String, required: true },
-    password: { type: String, required: true },
+    cloudinaryId: { type: String },
+    password: { type: String },
     role: { type: String, enum: ["User", "Admin"], default: "User" },
     refreshToken: { type: String },
+    googleId: { type: String },
   },
   {
     timestamps: true,

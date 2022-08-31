@@ -40,7 +40,9 @@ const editBlog = async (req, res, next) => {
 }
 const getSingleBlog = async (req, res, next) => {
   try {
-    const blog = await blogsModel.findById(req.params.id)
+    const blog = await blogsModel
+      .findById(req.params.id)
+      .populate({ path: "author", select: "name email avatar" })
     res.send(blog)
   } catch (error) {
     next(createHttpError(500, error.message))
@@ -97,6 +99,21 @@ const deleteShareBlog = async (req, res, next) => {
     next(createHttpError(500, error.message))
   }
 }
+// router.put("/:id/like", async (req, res, next) => {
+//   try {
+//     const { id } = req.body;
+//     const isLiked = await Blogs.findOne({ _id: req.params.id, likes: id });
+//     if (isLiked) {
+//       await Blogs.findByIdAndUpdate(req.params.id, { $pull: { likes: id } });
+//       res.send("UNLIKED");
+//     } else {
+//       await Blogs.findByIdAndUpdate(req.params.id, { $push: { likes: id } });
+//       res.send("LIKED");
+//     }
+//   } catch (error) {
+//     res.send(500).send({ message: error.message });
+//   }
+// });
 
 const blogsHandler = {
   getAllBlogs,
