@@ -36,7 +36,7 @@ authorRouter.get(
     try {
       const { accessToken, refreshToken } = req.user
       res.redirect(
-        `${process.env.API_URL}/users?accessToken=${accessToken}&refreshToken=${refreshToken}`
+        `${process.env.FE_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
       )
     } catch (error) {
       next(error)
